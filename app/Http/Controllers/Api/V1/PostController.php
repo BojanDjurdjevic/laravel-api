@@ -15,7 +15,7 @@ class PostController extends Controller
      */
     public function index()
     {
-        return PostResource::collection(Post::all());
+        return PostResource::collection(Post::with('author')->paginate()); // ->get()
     }
 
     /**
@@ -30,7 +30,7 @@ class PostController extends Controller
 
         $post = Post::create($data);
         return 
-        response()->json($post, 201)
+        response()->json(new PostResource($post), 201) // $post
         //->setStatusCode(201)
         ; 
     }
@@ -52,7 +52,7 @@ class PostController extends Controller
 
         //$post = Post::findOrFail($id);
 
-        return response()->json($post, 201);
+        return response()->json(new PostResource($post), 201);
     }
 
     /**
@@ -67,7 +67,7 @@ class PostController extends Controller
 
         $post->update($data);
 
-        return $post;
+        return new PostResource($post);
     }
 
     /**
